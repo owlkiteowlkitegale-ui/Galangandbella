@@ -1,0 +1,918 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Galeri Cinta Kenangan Galang & Bella</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,600;1,400&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        love: {
+                            50: '#fff1f2',
+                            100: '#ffe4e6',
+                            200: '#fecdd3',
+                            300: '#fda4af',
+                            400: '#fb7185',
+                            500: '#f43f5e',
+                            600: '#e11d48',
+                            700: '#be123c',
+                        }
+                    },
+                    fontFamily: {
+                        dancing: ['"Dancing Script"', 'cursive'],
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                        serif: ['"Playfair Display"', 'serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #fff1f2;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #fda4af;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #f43f5e;
+        }
+
+        /* Floating Hearts Animation */
+        .heart-particle {
+            position: fixed;
+            pointer-events: none;
+            opacity: 0;
+            animation: floatUp 6s linear infinite;
+            z-index: 0;
+        }
+
+        @keyframes floatUp {
+            0% {
+                transform: translateY(105vh) scale(0.3) rotate(0deg);
+                opacity: 0;
+            }
+            20% {
+                opacity: 0.7;
+            }
+            80% {
+                opacity: 0.7;
+            }
+            100% {
+                transform: translateY(-10vh) scale(1.2) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* Pulse Heart effect */
+        @keyframes heartBeat {
+            0% { transform: scale(1); }
+            14% { transform: scale(1.15); }
+            28% { transform: scale(1); }
+            42% { transform: scale(1.15); }
+            70% { transform: scale(1); }
+        }
+        .pulse-heart {
+            animation: heartBeat 2s infinite ease-in-out;
+        }
+
+        /* Glassmorphism card */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+
+        /* Envelope Animation */
+        .envelope-wrapper {
+            perspective: 1000px;
+        }
+        .envelope {
+            transform-style: preserve-3d;
+            transition: transform 0.6s ease;
+        }
+        .envelope.open .flap {
+            transform: rotateX(180deg);
+            z-index: 0;
+        }
+        .envelope .flap {
+            transform-origin: top;
+            transition: transform 0.5s ease 0.1s;
+            z-index: 10;
+        }
+        .envelope.open .letter {
+            transform: translateY(-80px);
+            z-index: 5;
+        }
+        .envelope .letter {
+            transition: transform 0.6s ease 0.3s;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-rose-50 via-pink-50 to-rose-100 min-h-screen text-slate-800 font-sans relative overflow-x-hidden selection:bg-rose-200 selection:text-rose-800">
+
+    <!-- Ambient Floating Hearts Background -->
+    <div id="heart-container"></div>
+
+    <!-- Background Music Audio Tag (Synthesized Warm Ambient Melodies) -->
+    <audio id="bg-music" loop>
+        <source src="https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=romantic-piano-112199.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- Top Music Floating Bar -->
+    <div class="fixed top-4 right-4 z-50 flex items-center gap-2">
+        <!-- Access Control Status Button -->
+        <button id="lock-toggle-btn" class="glass-card px-4 py-2 rounded-full shadow-lg flex items-center gap-2 hover:bg-white text-rose-600 transition-all duration-300 transform hover:scale-105 active:scale-95 border border-love-200">
+            <i data-lucide="lock" id="lock-icon" class="w-4 h-4"></i>
+            <span id="lock-status-text" class="text-xs font-bold">Mode Tamu</span>
+        </button>
+
+        <button id="music-toggle" class="glass-card px-4 py-2 rounded-full shadow-lg flex items-center gap-2 hover:bg-white text-love-600 transition-all duration-300 transform hover:scale-105 active:scale-95 border border-love-200">
+            <i data-lucide="music" class="w-4 h-4 animate-spin" style="animation-duration: 4s;"></i>
+            <span id="music-text" class="text-xs font-semibold">Putar Musik</span>
+        </button>
+    </div>
+
+    <div class="max-w-6xl mx-auto px-4 py-8 relative z-10 space-y-12">
+
+        <!-- HERO SECTION -->
+        <header class="text-center space-y-6 pt-6">
+            <div class="inline-flex items-center justify-center p-3 bg-white/80 rounded-full shadow-sm border border-love-100 mb-2">
+                <i data-lucide="heart" class="w-6 h-6 text-love-500 fill-love-500 pulse-heart"></i>
+                <span class="mx-2 text-xs font-bold tracking-widest uppercase text-love-600">BY GALANG & BELLA</span>
+                <i data-lucide="sparkles" class="w-5 h-5 text-amber-400"></i>
+            </div>
+            
+            <h1 class="font-dancing text-5xl md:text-7xl font-bold text-love-700 tracking-wide drop-shadow-sm">
+                Galeri Cinta Kenangan Galang & Bella 
+            </h1>
+            <p class="font-serif italic text-slate-600 max-w-lg mx-auto text-base md:text-lg">
+                "Setiap foto dan video menyimpan cerita, tawa, dan kehangatan rasa yang tak pernah memudar."
+            </p>
+
+            <!-- Counter Section -->
+            <div class="glass-card max-w-2xl mx-auto rounded-3xl p-6 shadow-xl border border-white/60">
+                <h2 class="text-sm font-semibold uppercase tracking-wider text-love-600 mb-4 flex items-center justify-center gap-2">
+                    <i data-lucide="calendar-heart" class="w-4 h-4"></i>
+                    Waktu Bersama Yang Indah
+                </h2>
+                
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center">
+                    <div class="bg-white/90 p-3 rounded-2xl shadow-sm border border-rose-100">
+                        <span id="days-count" class="block text-3xl font-bold text-love-600">0</span>
+                        <span class="text-xs text-slate-500 font-medium">Hari</span>
+                    </div>
+                    <div class="bg-white/90 p-3 rounded-2xl shadow-sm border border-rose-100">
+                        <span id="hours-count" class="block text-3xl font-bold text-love-600">0</span>
+                        <span class="text-xs text-slate-500 font-medium">Jam</span>
+                    </div>
+                    <div class="bg-white/90 p-3 rounded-2xl shadow-sm border border-rose-100">
+                        <span id="minutes-count" class="block text-3xl font-bold text-love-600">0</span>
+                        <span class="text-xs text-slate-500 font-medium">Menit</span>
+                    </div>
+                    <div class="bg-white/90 p-3 rounded-2xl shadow-sm border border-rose-100">
+                        <span id="seconds-count" class="block text-3xl font-bold text-love-600">0</span>
+                        <span class="text-xs text-slate-500 font-medium">Detik</span>
+                    </div>
+                </div>
+
+                <!-- Date Picker to customize start date -->
+                <div class="mt-4 flex items-center justify-center gap-2 text-xs text-slate-500">
+                    <label for="start-date" class="cursor-pointer hover:text-love-600 transition">Tanggal Dimulai:</label>
+                    <input type="date" id="start-date" class="bg-white/80 border border-love-200 rounded-lg px-2 py-1 text-xs text-slate-700 outline-none focus:ring-2 focus:ring-love-400 disabled:opacity-60 disabled:cursor-not-allowed">
+                </div>
+            </div>
+        </header>
+
+        <!-- UPLOAD SECTION (Controlled Access) -->
+        <section class="max-w-2xl mx-auto">
+            <!-- Guest Mode Banner when Locked -->
+            <div id="guest-upload-notice" class="glass-card rounded-3xl p-6 shadow-xl border border-white/80 text-center space-y-3">
+                <div class="w-12 h-12 bg-rose-100 text-love-600 rounded-full flex items-center justify-center mx-auto">
+                    <i data-lucide="shield-alert" class="w-6 h-6"></i>
+                </div>
+                <h3 class="text-lg font-bold text-slate-800">Mode Tamu (Hanya Lihat)</h3>
+                <p class="text-xs text-slate-500 max-w-sm mx-auto">Anda sedang dalam mode baca saja. Masukkan PIN keamanan untuk mengunggah foto/video baru atau mengelola kenangan.</p>
+                <button onclick="openPinModal()" class="px-5 py-2.5 bg-gradient-to-r from-love-500 to-rose-600 text-white font-semibold text-xs rounded-xl shadow-md hover:opacity-95 transition">
+                    Masukkan PIN Pemilik
+                </button>
+            </div>
+
+            <!-- Full Upload Form (Hidden when Locked) -->
+            <div id="upload-card" class="glass-card rounded-3xl p-6 md:p-8 shadow-xl border border-white/80 relative hidden">
+                <div class="flex items-center justify-between mb-6 border-b border-rose-100 pb-4">
+                    <div class="flex items-center gap-3">
+                        <div class="p-3 bg-love-500 rounded-2xl text-white shadow-md shadow-love-200">
+                            <i data-lucide="plus-circle" class="w-6 h-6"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold text-slate-800">Abadikan Momen Baru</h3>
+                            <p class="text-xs text-slate-500">Unggah foto atau video kenangan manis kalian</p>
+                        </div>
+                    </div>
+                    <button onclick="openChangePinModal()" class="text-xs text-love-600 hover:underline font-semibold flex items-center gap-1">
+                        <i data-lucide="key-round" class="w-3.5 h-3.5"></i> Ubah PIN
+                    </button>
+                </div>
+
+                <form id="upload-form" class="space-y-4">
+                    <!-- Custom Drag & Drop Area -->
+                    <div id="drop-zone" class="border-2 border-dashed border-love-300 hover:border-love-500 bg-love-50/50 hover:bg-love-50 rounded-2xl p-6 text-center cursor-pointer transition-all duration-300">
+                        <input type="file" id="file-input" accept="image/*,video/*" class="hidden">
+                        
+                        <div id="preview-container" class="hidden mb-3">
+                            <div class="relative inline-block max-h-48 rounded-xl overflow-hidden shadow-md">
+                                <img id="image-preview" src="" class="hidden max-h-48 object-cover rounded-xl" alt="Preview">
+                                <video id="video-preview" src="" class="hidden max-h-48 rounded-xl" controls></video>
+                                <button type="button" id="remove-preview" class="absolute top-2 right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600 shadow">
+                                    <i data-lucide="x" class="w-4 h-4"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div id="upload-placeholder" class="space-y-2">
+                            <i data-lucide="cloud-upload" class="w-10 h-10 text-love-400 mx-auto"></i>
+                            <p class="text-sm font-semibold text-slate-700">Klik atau seret foto/video ke sini</p>
+                            <p class="text-xs text-slate-400">Format yang didukung: JPG, PNG, MP4, MOV (Maks. per Sesi Browser)</p>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600 mb-1">Judul / Caption Momen</label>
+                            <input type="text" id="caption-input" required placeholder="Contoh: Kencan di Pantai Sunset" class="w-full px-4 py-2.5 rounded-xl border border-rose-200 bg-white/80 focus:bg-white text-sm outline-none focus:ring-2 focus:ring-love-400 transition">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600 mb-1">Tanggal Momen</label>
+                            <input type="date" id="date-input" required class="w-full px-4 py-2.5 rounded-xl border border-rose-200 bg-white/80 focus:bg-white text-sm outline-none focus:ring-2 focus:ring-love-400 transition">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">Catatan Kasih (Opsional)</label>
+                        <textarea id="note-input" rows="2" placeholder="Tulis ungkapan perasaan atau ingatan manis saat momen ini..." class="w-full px-4 py-2.5 rounded-xl border border-rose-200 bg-white/80 focus:bg-white text-sm outline-none focus:ring-2 focus:ring-love-400 transition"></textarea>
+                    </div>
+
+                    <button type="submit" class="w-full bg-gradient-to-r from-love-500 to-rose-600 text-white font-semibold py-3 rounded-xl shadow-lg shadow-love-200 hover:shadow-love-300 hover:opacity-95 transition-all transform active:scale-98 flex items-center justify-center gap-2">
+                        <i data-lucide="heart-handshake" class="w-5 h-5"></i>
+                        Simpan Kenangan Ini
+                    </button>
+                </form>
+            </div>
+        </section>
+
+        <!-- GALLERY SECTION -->
+        <section class="space-y-6">
+            <div class="flex flex-col md:flex-row items-center justify-between gap-4 border-b border-rose-200 pb-4">
+                <div>
+                    <h2 class="text-2xl font-bold text-slate-800 flex items-center gap-2">
+                        <i data-lucide="images" class="w-6 h-6 text-love-500"></i>
+                        Linimasa Kenangan
+                    </h2>
+                    <p class="text-xs text-slate-500">Jelajahi setiap detik bermakna yang telah tersimpan</p>
+                </div>
+
+                <!-- Filter Tabs -->
+                <div class="flex items-center bg-white/80 p-1.5 rounded-2xl shadow-sm border border-rose-100 gap-1 overflow-x-auto w-full md:w-auto">
+                    <button data-filter="all" class="filter-btn px-4 py-2 rounded-xl text-xs font-bold transition-all bg-love-500 text-white shadow-sm">Semua</button>
+                    <button data-filter="image" class="filter-btn px-4 py-2 rounded-xl text-xs font-bold text-slate-600 hover:bg-rose-50 transition-all">Foto</button>
+                    <button data-filter="video" class="filter-btn px-4 py-2 rounded-xl text-xs font-bold text-slate-600 hover:bg-rose-50 transition-all">Video</button>
+                    <button data-filter="favorite" class="filter-btn px-4 py-2 rounded-xl text-xs font-bold text-slate-600 hover:bg-rose-50 transition-all flex items-center gap-1">
+                        <i data-lucide="heart" class="w-3.5 h-3.5 fill-love-500 text-love-500"></i> Favorit
+                    </button>
+                </div>
+            </div>
+
+            <!-- Memory Grid Container -->
+            <div id="gallery-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Dynamically Populated by JavaScript -->
+            </div>
+
+            <!-- Empty State -->
+            <div id="empty-state" class="hidden text-center py-16 glass-card rounded-3xl border border-white/60">
+                <i data-lucide="folder-heart" class="w-16 h-16 text-love-300 mx-auto mb-3"></i>
+                <h4 class="text-lg font-bold text-slate-700">Belum Ada Kenangan Tersimpan</h4>
+                <p class="text-xs text-slate-400 max-w-sm mx-auto mt-1">Mulai mengunggah foto atau video kebersamaan kalian untuk memenuhi galeri indah ini.</p>
+            </div>
+        </section>
+
+        <!-- LOVE LETTER SECTION -->
+        <section class="py-8">
+            <div class="max-w-xl mx-auto text-center space-y-4">
+                <h3 class="font-dancing text-4xl text-love-700 font-bold">Surat Cinta Kita</h3>
+                <p class="text-xs text-slate-500">Sentuh amplop di bawah ini untuk membuka pesan romantis spesial kami.</p>
+                
+                <!-- Interactive Envelope -->
+                <div class="envelope-wrapper py-10">
+                    <div id="envelope" class="envelope relative w-72 md:w-80 h-48 mx-auto bg-rose-300 rounded-b-xl shadow-xl border border-rose-400 cursor-pointer flex items-center justify-center">
+                        <!-- Top Flap -->
+                        <div class="flap absolute top-0 left-0 w-0 h-0 border-l-[144px] md:border-l-[160px] border-l-transparent border-r-[144px] md:border-r-[160px] border-r-transparent border-t-[100px] border-t-rose-400"></div>
+                        
+                        <!-- Letter Content -->
+                        <div class="letter absolute top-2 w-[90%] bg-amber-50 p-6 rounded-lg shadow-md border border-amber-200 text-left transition-all duration-500">
+                            <h4 class="font-dancing text-2xl text-love-600 font-bold mb-2">Untukmu yang Terkasih,</h4>
+                            <p id="love-letter-text" class="font-serif text-xs leading-relaxed text-slate-700 italic">
+                                "Terima kasih telah hadir dan mewarnai hari-hariku dengan kehangatan. Setiap momen bersamamu adalah kenangan terbaik yang akan selalu kujaga selamanya. Aku mencintaimu!"
+                            </p>
+                            <span class="block text-right font-dancing text-lg text-love-500 mt-4">~ Galang & Bella ❤️</span>
+                        </div>
+
+                        <!-- Envelope Front Sides -->
+                        <div class="absolute bottom-0 left-0 w-0 h-0 border-b-[100px] border-b-rose-200 border-r-[144px] md:border-r-[160px] border-r-transparent rounded-bl-xl"></div>
+                        <div class="absolute bottom-0 right-0 w-0 h-0 border-b-[100px] border-b-rose-200 border-l-[144px] md:border-l-[160px] border-l-transparent rounded-br-xl"></div>
+
+                        <!-- Wax Seal Button -->
+                        <div class="wax-seal absolute z-20 w-12 h-12 bg-love-600 rounded-full flex items-center justify-center shadow-lg border-2 border-love-300 pulse-heart">
+                            <i data-lucide="heart" class="w-6 h-6 text-white fill-white"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- LIGHTBOX / MEDIA MODAL VIEWER -->
+    <div id="modal" class="fixed inset-0 bg-slate-900/90 z-50 hidden flex items-center justify-center p-4 backdrop-blur-md">
+        <button id="close-modal" class="absolute top-4 right-4 text-white/80 hover:text-white p-2 rounded-full bg-slate-800/50 hover:bg-slate-800 transition">
+            <i data-lucide="x" class="w-6 h-6"></i>
+        </button>
+
+        <div class="max-w-4xl w-full max-h-[90vh] bg-transparent flex flex-col md:flex-row gap-6 items-center overflow-hidden">
+            <div id="modal-media-container" class="w-full md:w-2/3 max-h-[70vh] flex items-center justify-center bg-black/40 rounded-2xl overflow-hidden shadow-2xl">
+                <!-- Image or Video dynamically placed here -->
+            </div>
+
+            <div class="w-full md:w-1/3 text-white space-y-4 p-4 bg-white/10 rounded-2xl border border-white/10 backdrop-blur-md">
+                <span id="modal-date" class="text-xs text-rose-300 font-semibold px-2.5 py-1 rounded-full bg-rose-500/20 border border-rose-500/30 inline-block"></span>
+                <h3 id="modal-caption" class="text-2xl font-bold text-white"></h3>
+                <p id="modal-note" class="text-sm text-slate-200 font-serif italic leading-relaxed"></p>
+                <div class="pt-4 border-t border-white/10 flex items-center justify-between">
+                    <button id="modal-fav-btn" class="flex items-center gap-2 text-xs font-medium px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 transition">
+                        <i data-lucide="heart" class="w-4 h-4"></i>
+                        <span>Sukai</span>
+                    </button>
+                    <button id="modal-delete-btn" class="admin-only flex items-center gap-2 text-xs font-medium px-4 py-2 rounded-xl bg-red-500/20 hover:bg-red-500/40 text-red-300 transition">
+                        <i data-lucide="trash-2" class="w-4 h-4"></i>
+                        <span>Hapus</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PIN SECURITY MODAL -->
+    <div id="pin-modal" class="fixed inset-0 bg-slate-900/80 z-50 hidden flex items-center justify-center p-4 backdrop-blur-sm">
+        <div class="glass-card max-w-sm w-full bg-white rounded-3xl p-6 shadow-2xl border border-rose-100 space-y-4 text-center">
+            <div class="w-12 h-12 bg-rose-100 text-love-600 rounded-full flex items-center justify-center mx-auto">
+                <i data-lucide="lock" class="w-6 h-6"></i>
+            </div>
+            <div>
+                <h3 id="pin-modal-title" class="text-lg font-bold text-slate-800">Masukkan PIN Keamanan</h3>
+                <p id="pin-modal-desc" class="text-xs text-slate-500 mt-1">Masukkan 4 digit PIN untuk membuka Akses Admin/Pasangan</p>
+            </div>
+            
+            <div class="space-y-3">
+                <input type="password" id="pin-input" maxlength="6" placeholder="****" class="w-full text-center text-2xl font-bold tracking-widest px-4 py-3 rounded-2xl border border-rose-200 bg-rose-50/50 focus:bg-white outline-none focus:ring-2 focus:ring-love-400">
+                <div class="flex gap-2">
+                    <button type="button" onclick="closePinModal()" class="w-1/2 py-2.5 rounded-xl border border-slate-200 text-slate-600 text-xs font-semibold hover:bg-slate-50">Batal</button>
+                    <button type="button" onclick="verifyPin()" class="w-1/2 py-2.5 rounded-xl bg-love-500 text-white text-xs font-semibold hover:bg-love-600 shadow-md shadow-love-200">Verifikasi</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- NOTIFICATION TOAST -->
+    <div id="toast" class="fixed bottom-6 right-6 z-50 transform translate-y-20 opacity-0 transition-all duration-300 glass-card px-5 py-3 rounded-2xl shadow-xl border border-love-200 flex items-center gap-3">
+        <i data-lucide="check-circle-2" class="w-5 h-5 text-love-500"></i>
+        <span id="toast-message" class="text-xs font-semibold text-slate-700">Pesan Toast</span>
+    </div>
+
+    <script>
+        // --- DATA STATE & INITIALIZATION ---
+        let memories = JSON.parse(localStorage.getItem('love_memories')) || [
+            {
+                id: '1',
+                type: 'image',
+                url: 'https://images.unsplash.com/photo-1518199266791-5375a83190b7?auto=format&fit=crop&w=800&q=80',
+                caption: 'Kencan Pertama Di Taman',
+                date: '2023-02-14',
+                note: 'Saat itu udara cukup dingin, tapi senyummu membuat semuanya terasa hangat.',
+                favorite: true
+            },
+            {
+                id: '2',
+                type: 'image',
+                url: 'https://images.unsplash.com/photo-1522673607200-164d1b6ce486?auto=format&fit=crop&w=800&q=80',
+                caption: 'Liburan Akhir Tahun',
+                date: '2023-12-31',
+                note: 'Melihat kembang api bersama dan berharap waktu berhenti sejenak.',
+                favorite: false
+            }
+        ];
+
+        let currentFilter = 'all';
+        let activeMediaFile = null;
+        let activeMediaUrl = null;
+        let selectedMemoryId = null;
+
+        // SECURITY STATE
+        let isAdminUnlocked = false; // default Guest Mode
+        let appPin = localStorage.getItem('love_app_pin') || '250520'; // Default PIN: 1234
+        let isChangingPin = false;
+
+        // Default startDate (e.g. 1 Year Ago if not set)
+        let loveStartDate = localStorage.getItem('love_start_date') || new Date(Date.now() - 365 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+
+        // --- SECURITY / ACCESS CONTROL LOGIC ---
+        function updateAccessUI() {
+            const lockIcon = document.getElementById('lock-icon');
+            const lockStatusText = document.getElementById('lock-status-text');
+            const guestNotice = document.getElementById('guest-upload-notice');
+            const uploadCard = document.getElementById('upload-card');
+            const startDateInput = document.getElementById('start-date');
+
+            if (isAdminUnlocked) {
+                lockIcon.setAttribute('data-lucide', 'unlock');
+                lockStatusText.innerText = 'Mode Pasangan';
+                guestNotice.classList.add('hidden');
+                uploadCard.classList.remove('hidden');
+                startDateInput.removeAttribute('disabled');
+            } else {
+                lockIcon.setAttribute('data-lucide', 'lock');
+                lockStatusText.innerText = 'Mode Tamu';
+                guestNotice.classList.remove('hidden');
+                uploadCard.classList.add('hidden');
+                startDateInput.setAttribute('disabled', 'true');
+            }
+
+            renderGallery();
+            lucide.createIcons();
+        }
+
+        document.getElementById('lock-toggle-btn').addEventListener('click', () => {
+            if (isAdminUnlocked) {
+                // Lock down back to Guest Mode
+                isAdminUnlocked = false;
+                showToast('Kembali ke Mode Tamu (Terkunci)');
+                updateAccessUI();
+            } else {
+                openPinModal();
+            }
+        });
+
+        function openPinModal(isChangeMode = false) {
+            isChangingPin = isChangeMode;
+            const title = document.getElementById('pin-modal-title');
+            const desc = document.getElementById('pin-modal-desc');
+            const pinInput = document.getElementById('pin-input');
+
+            pinInput.value = '';
+            if (isChangeMode) {
+                title.innerText = 'Ubah PIN Keamanan';
+                desc.innerText = 'Masukkan PIN baru (4-6 Digit)';
+            } else {
+                title.innerText = 'Masukkan PIN Keamanan';
+                desc.innerText = 'Masukkan PIN untuk membuka Akses Admin/Pasangan';
+            }
+
+            document.getElementById('pin-modal').classList.remove('hidden');
+            setTimeout(() => pinInput.focus(), 100);
+        }
+
+        function closePinModal() {
+            document.getElementById('pin-modal').classList.add('hidden');
+        }
+
+        function verifyPin() {
+            const pinInput = document.getElementById('pin-input').value.trim();
+
+            if (isChangingPin) {
+                if (pinInput.length < 4) {
+                    showToast('PIN minimal 4 digit!');
+                    return;
+                }
+                appPin = pinInput;
+                localStorage.setItem('love_app_pin', appPin);
+                showToast('PIN keamanan berhasil diperbarui!');
+                closePinModal();
+                return;
+            }
+
+            if (pinInput === appPin) {
+                isAdminUnlocked = true;
+                updateAccessUI();
+                closePinModal();
+                showToast('Mode Pasangan / Admin Aktif! ❤️');
+            } else {
+                showToast('PIN Salah! Silakan coba lagi.');
+                document.getElementById('pin-input').value = '';
+            }
+        }
+
+        function openChangePinModal() {
+            openPinModal(true);
+        }
+
+        // Allow 'Enter' key in PIN input
+        document.getElementById('pin-input').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') verifyPin();
+        });
+
+        // --- RENDER GALLERY GRID ---
+        function renderGallery() {
+            const grid = document.getElementById('gallery-grid');
+            const emptyState = document.getElementById('empty-state');
+            grid.innerHTML = '';
+
+            const filtered = memories.filter(item => {
+                if (currentFilter === 'image') return item.type === 'image';
+                if (currentFilter === 'video') return item.type === 'video';
+                if (currentFilter === 'favorite') return item.favorite;
+                return true;
+            });
+
+            if (filtered.length === 0) {
+                emptyState.classList.remove('hidden');
+            } else {
+                emptyState.classList.add('hidden');
+            }
+
+            filtered.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'glass-card rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 group border border-white/80 flex flex-col justify-between';
+
+                const mediaMarkup = item.type === 'image' 
+                    ? `<img src="${item.url}" alt="${item.caption}" class="w-full h-56 object-cover group-hover:scale-105 transition duration-500">`
+                    : `<div class="relative w-full h-56 bg-black flex items-center justify-center">
+                        <video src="${item.url}" class="w-full h-full object-cover"></video>
+                        <div class="absolute inset-0 bg-black/20 flex items-center justify-center">
+                            <div class="p-3 bg-white/80 rounded-full text-love-600 shadow-lg">
+                                <i data-lucide="play" class="w-6 h-6 fill-love-600"></i>
+                            </div>
+                        </div>
+                       </div>`;
+
+                const deleteBtnMarkup = isAdminUnlocked 
+                    ? `<button onclick="deleteMemory(event, '${item.id}')" class="p-2 rounded-full hover:bg-red-50 text-slate-400 hover:text-red-500 transition">
+                        <i data-lucide="trash-2" class="w-4 h-4"></i>
+                       </button>` 
+                    : '';
+
+                card.innerHTML = `
+                    <div>
+                        <div class="relative cursor-pointer" onclick="openModal('${item.id}')">
+                            ${mediaMarkup}
+                            <span class="absolute top-3 left-3 bg-white/80 backdrop-blur-md text-slate-700 text-[10px] font-bold px-2.5 py-1 rounded-full border border-white">
+                                ${formatDate(item.date)}
+                            </span>
+                        </div>
+                        <div class="p-4 space-y-2">
+                            <h4 class="font-bold text-slate-800 text-base line-clamp-1">${escapeHtml(item.caption)}</h4>
+                            ${item.note ? `<p class="text-xs text-slate-500 font-serif italic line-clamp-2">"${escapeHtml(item.note)}"</p>` : ''}
+                        </div>
+                    </div>
+                    <div class="px-4 pb-4 pt-1 flex items-center justify-between border-t border-rose-100/60 mt-auto">
+                        <button onclick="toggleFavorite(event, '${item.id}')" class="p-2 rounded-full hover:bg-rose-50 text-slate-400 transition flex items-center gap-1 text-xs font-semibold">
+                            <i data-lucide="heart" class="w-4 h-4 ${item.favorite ? 'fill-love-500 text-love-500' : ''}"></i>
+                            <span class="${item.favorite ? 'text-love-500' : 'text-slate-400'}">${item.favorite ? 'Disukai' : 'Suka'}</span>
+                        </button>
+                        ${deleteBtnMarkup}
+                    </div>
+                `;
+
+                grid.appendChild(card);
+            });
+
+            lucide.createIcons();
+        }
+
+        function deleteMemory(e, id) {
+            if (e) e.stopPropagation();
+            if (!isAdminUnlocked) {
+                openPinModal();
+                return;
+            }
+            memories = memories.filter(m => m.id !== id);
+            saveToStorage();
+            renderGallery();
+            closeModal();
+            showToast('Kenangan telah dihapus');
+        }
+
+        // --- LIGHTBOX MODAL ---
+        function openModal(id) {
+            const memory = memories.find(m => m.id === id);
+            if (!memory) return;
+
+            selectedMemoryId = id;
+            const container = document.getElementById('modal-media-container');
+            container.innerHTML = memory.type === 'image'
+                ? `<img src="${memory.url}" class="max-h-[70vh] w-auto object-contain rounded-xl" alt="Preview">`
+                : `<video src="${memory.url}" controls autoplay class="max-h-[70vh] w-full rounded-xl"></video>`;
+
+            document.getElementById('modal-caption').innerText = memory.caption;
+            document.getElementById('modal-date').innerText = formatDate(memory.date);
+            document.getElementById('modal-note').innerText = memory.note ? `"${memory.note}"` : '';
+
+            updateModalFavButton(memory.favorite);
+
+            const deleteModalBtn = document.getElementById('modal-delete-btn');
+            if (isAdminUnlocked) {
+                deleteModalBtn.classList.remove('hidden');
+                deleteModalBtn.onclick = (e) => deleteMemory(e, id);
+            } else {
+                deleteModalBtn.classList.add('hidden');
+            }
+
+            document.getElementById('modal-fav-btn').onclick = (e) => toggleFavorite(e, id);
+
+            document.getElementById('modal').classList.remove('hidden');
+        }
+
+        // --- INIT ---
+        function createHeartParticles() {
+            const container = document.getElementById('heart-container');
+            if (!container) return;
+            const hearts = ['❤️', '💖', '💕', '💗', '🌸'];
+            for (let i = 0; i < 15; i++) {
+                const heart = document.createElement('div');
+                heart.className = 'heart-particle';
+                heart.innerText = hearts[Math.floor(Math.random() * hearts.length)];
+                heart.style.left = Math.random() * 100 + 'vw';
+                heart.style.animationDuration = (Math.random() * 3 + 4) + 's';
+                heart.style.animationDelay = (Math.random() * 5) + 's';
+                heart.style.fontSize = (Math.random() * 12 + 16) + 'px';
+                container.appendChild(heart);
+            }
+        }
+
+        function updateLoveTimer() {
+            const startDateInput = document.getElementById('start-date');
+            if (startDateInput && !startDateInput.value) {
+                startDateInput.value = loveStartDate;
+            }
+            const currentStart = startDateInput ? new Date(startDateInput.value || loveStartDate) : new Date(loveStartDate);
+            const now = new Date();
+            const diff = now - currentStart;
+
+            if (isNaN(diff) || diff < 0) {
+                document.getElementById('days-count').innerText = '0';
+                document.getElementById('hours-count').innerText = '0';
+                document.getElementById('minutes-count').innerText = '0';
+                document.getElementById('seconds-count').innerText = '0';
+                return;
+            }
+
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+            const minutes = Math.floor((diff / (1000 * 60)) % 60);
+            const seconds = Math.floor((diff / 1000) % 60);
+
+            document.getElementById('days-count').innerText = days;
+            document.getElementById('hours-count').innerText = hours;
+            document.getElementById('minutes-count').innerText = minutes;
+            document.getElementById('seconds-count').innerText = seconds;
+        }
+
+        document.getElementById('start-date')?.addEventListener('change', (e) => {
+            loveStartDate = e.target.value;
+            localStorage.setItem('love_start_date', loveStartDate);
+            updateLoveTimer();
+        });
+
+        function formatDate(dateString) {
+            if (!dateString) return '';
+            const options = { year: 'numeric', month: 'short', day: 'numeric' };
+            return new Date(dateString).toLocaleDateString('id-ID', options);
+        }
+
+        function escapeHtml(text) {
+            if (!text) return '';
+            return text.replace(/[&<>"']/g, function(m) {
+                return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[m];
+            });
+        }
+
+        function saveToStorage() {
+            localStorage.setItem('love_memories', JSON.stringify(memories));
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            const msgEl = document.getElementById('toast-message');
+            msgEl.innerText = message;
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            toast.classList.add('translate-y-0', 'opacity-100');
+            setTimeout(() => {
+                toast.classList.remove('translate-y-0', 'opacity-100');
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 3000);
+        }
+
+        function toggleFavorite(e, id) {
+            if (e) e.stopPropagation();
+            const memory = memories.find(m => m.id === id);
+            if (memory) {
+                memory.favorite = !memory.favorite;
+                saveToStorage();
+                renderGallery();
+                if (selectedMemoryId === id) {
+                    updateModalFavButton(memory.favorite);
+                }
+                showToast(memory.favorite ? 'Ditambahkan ke favorit ❤️' : 'Dihapus dari favorit');
+            }
+        }
+
+        function updateModalFavButton(isFav) {
+            const btn = document.getElementById('modal-fav-btn');
+            if (!btn) return;
+            btn.innerHTML = `<i data-lucide="heart" class="w-4 h-4 ${isFav ? 'fill-love-500 text-love-500' : ''}"></i><span>${isFav ? 'Disukai' : 'Suka'}</span>`;
+            lucide.createIcons();
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('modal');
+            modal.classList.add('hidden');
+            const container = document.getElementById('modal-media-container');
+            container.innerHTML = '';
+            selectedMemoryId = null;
+        }
+
+        document.getElementById('close-modal')?.addEventListener('click', closeModal);
+        document.getElementById('modal')?.addEventListener('click', (e) => {
+            if (e.target.id === 'modal') closeModal();
+        });
+
+        // Interactive Envelope Toggle
+        document.getElementById('envelope')?.addEventListener('click', function () {
+            this.classList.toggle('open');
+        });
+
+        // Toggle Music Playback
+        const bgMusic = document.getElementById('bg-music');
+        const musicToggle = document.getElementById('music-toggle');
+        const musicText = document.getElementById('music-text');
+
+        musicToggle?.addEventListener('click', () => {
+            if (bgMusic.paused) {
+                bgMusic.play().then(() => {
+                    musicText.innerText = 'Hentikan Musik';
+                }).catch(() => {
+                    showToast('Klik layar terlebih dahulu untuk mengizinkan audio');
+                });
+            } else {
+                bgMusic.pause();
+                musicText.innerText = 'Putar Musik';
+            }
+        });
+
+        // Filter Buttons Event Listener
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.filter-btn').forEach(b => {
+                    b.classList.remove('bg-love-500', 'text-white', 'shadow-sm');
+                    b.classList.add('text-slate-600');
+                });
+                btn.classList.add('bg-love-500', 'text-white', 'shadow-sm');
+                btn.classList.remove('text-slate-600');
+                currentFilter = btn.getAttribute('data-filter');
+                renderGallery();
+            });
+        });
+
+        // Dropzone & Upload Handler
+        const dropZone = document.getElementById('drop-zone');
+        const fileInput = document.getElementById('file-input');
+        const imgPreview = document.getElementById('image-preview');
+        const videoPreview = document.getElementById('video-preview');
+        const previewContainer = document.getElementById('preview-container');
+        const uploadPlaceholder = document.getElementById('upload-placeholder');
+        const removePreviewBtn = document.getElementById('remove-preview');
+
+        dropZone?.addEventListener('click', (e) => {
+            if (e.target.closest('#remove-preview')) return;
+            fileInput.click();
+        });
+
+        fileInput?.addEventListener('change', handleFileSelect);
+
+        dropZone?.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropZone.classList.add('bg-love-100');
+        });
+
+        dropZone?.addEventListener('dragleave', () => {
+            dropZone.classList.remove('bg-love-100');
+        });
+
+        dropZone?.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('bg-love-100');
+            if (e.dataTransfer.files.length > 0) {
+                fileInput.files = e.dataTransfer.files;
+                handleFileSelect();
+            }
+        });
+
+        function handleFileSelect() {
+            const file = fileInput.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                activeMediaUrl = e.target.result;
+                activeMediaFile = file;
+
+                uploadPlaceholder.classList.add('hidden');
+                previewContainer.classList.remove('hidden');
+
+                if (file.type.startsWith('image/')) {
+                    imgPreview.src = activeMediaUrl;
+                    imgPreview.classList.remove('hidden');
+                    videoPreview.classList.add('hidden');
+                } else if (file.type.startsWith('video/')) {
+                    videoPreview.src = activeMediaUrl;
+                    videoPreview.classList.remove('hidden');
+                    imgPreview.classList.add('hidden');
+                }
+            };
+            reader.readAsDataURL(file);
+        }
+
+        removePreviewBtn?.addEventListener('click', (e) => {
+            e.stopPropagation();
+            fileInput.value = '';
+            activeMediaUrl = null;
+            activeMediaFile = null;
+            previewContainer.classList.add('hidden');
+            imgPreview.src = '';
+            videoPreview.src = '';
+            uploadPlaceholder.classList.remove('hidden');
+        });
+
+        // Form Submit
+        document.getElementById('upload-form')?.addEventListener('submit', (e) => {
+            e.preventDefault();
+            if (!isAdminUnlocked) {
+                openPinModal();
+                return;
+            }
+
+            if (!activeMediaUrl) {
+                showToast('Pilih foto atau video terlebih dahulu!');
+                return;
+            }
+
+            const caption = document.getElementById('caption-input').value.trim();
+            const date = document.getElementById('date-input').value;
+            const note = document.getElementById('note-input').value.trim();
+            const fileType = activeMediaFile ? (activeMediaFile.type.startsWith('video') ? 'video' : 'image') : 'image';
+
+            const newMemory = {
+                id: Date.now().toString(),
+                type: fileType,
+                url: activeMediaUrl,
+                caption: caption,
+                date: date,
+                note: note,
+                favorite: false
+            };
+
+            memories.unshift(newMemory);
+            saveToStorage();
+            renderGallery();
+
+            // Reset Form
+            document.getElementById('upload-form').reset();
+            removePreviewBtn.click();
+            document.getElementById('date-input').value = new Date().toISOString().split('T')[0];
+            showToast('Kenangan manis berhasil disimpan! ❤️');
+        });
+
+        window.onload = () => {
+            createHeartParticles();
+            updateAccessUI();
+            updateLoveTimer();
+            setInterval(updateLoveTimer, 1000);
+            
+            // Default Today's date for upload
+            document.getElementById('date-input').value = new Date().toISOString().split('T')[0];
+        };
+    </script>
+</body>
+</html>
